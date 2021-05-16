@@ -36,20 +36,25 @@ const addTransactionInDOM = transaction => {
     transactionUl.append(li)
 }
 
+const getExpenses = transactionsAmounts => Math.abs(transactionsAmounts
+    .filter(value => value < 0)
+    .reduce((accumulator, value) => accumulator + value, 0))
+    .toFixed(2)
+
+const getIncome = transactionsAmounts => transactionsAmounts
+    .filter(value => value > 0)
+    .reduce((accumulator, value) => accumulator + value, 0)
+    .toFixed(2)
+
+const getTotal = transactionsAmounts => transactionsAmounts
+    .reduce((accumulator, transaction) => accumulator + transaction, 0)
+    .toFixed(2)
+
 const updateBalanceValues = ()=> {
-    const transactionsAmounts = transactions
-        .map(transaction => transaction.amount)
-    const total = transactionsAmounts
-        .reduce((accumulator, transaction) => accumulator + transaction, 0)
-        .toFixed(2)
-    const income = transactionsAmounts
-        .filter(value => value > 0)
-        .reduce((accumulator , value) => accumulator + value, 0)
-        .toFixed(2)
-    const expense = Math.abs(transactionsAmounts
-        .filter(value => value < 0)
-        .reduce((accumulator, value) => accumulator + value, 0))
-        .toFixed(2)
+    const transactionsAmounts = transactions.map(({amount}) => amount)
+    const total = getTotal (transactionsAmounts)
+    const income = getIncome (transactionsAmounts)
+    const expense = getExpenses(transactionsAmounts)
 
     balanceDisplay.textContent = `R$ ${total}`
     incomeDisplay.textContent = `R$ ${income}`
@@ -78,13 +83,19 @@ const addToTransactionsArray = (transactionName, transactionAmount) => {
     })
 }
 
-const handleFormSubmit = (event => {
+const cleanInputs = () => {
+    inputTransactionName.value = ''
+    inputTransactionAmount.value = ''
+}
+
+const handleFormSubmit = event => {
     event.preventDefault()
 
     const transactionName = inputTransactionName.value.trim()
     const transactionAmount = inputTransactionAmount.value.trim()
+    const issSomeInputEmpty = transactionName === '' || transactionAmount === ''
 
-    if (transactionName === '' || transactionAmount === ''){
+    if (issSomeInputEmpty){
         alert('Por favor, preencha tanto o nome quanto o valor da transação')
         return
     }
@@ -92,9 +103,7 @@ const handleFormSubmit = (event => {
     addToTransactionsArray(transactionName, transactionAmount)
     init()
     updateLocalStorage()
-
-    inputTransactionName.value = ''
-    inputTransactionAmount.value = ''
+    cleanInputs()
 }
 
 form.addEventListener('submit', handleFormSubmit)
