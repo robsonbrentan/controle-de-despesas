@@ -65,12 +65,20 @@ updateBalanceValues()
 init()
 
 const updateLocalStorage = () => {
-    localStorage.setItem('trasactions', JSON.stringify(transactions))
+    localStorage.setItem('transactions', JSON.stringify(transactions))
 }
 
 const generateID = () => Math.round(Math.random() * 1000)
 
-form.addEventListener('submit', event => {
+const addToTransactionsArray = (transactionName, transactionAmount) => {
+    transactions.push({
+        id: generateID(),
+        name: transactionName,
+        amount: Number(transactionAmount)
+    })
+}
+
+const handleFormSubmit = (event => {
     event.preventDefault()
 
     const transactionName = inputTransactionName.value.trim()
@@ -81,17 +89,12 @@ form.addEventListener('submit', event => {
         return
     }
 
-    const transaction = {
-        id: generateID(),
-        name: transactionName,
-        amount: Number(transactionAmount)
-    }
-
-    transactions.push(transaction)
+    addToTransactionsArray(transactionName, transactionAmount)
     init()
     updateLocalStorage()
 
     inputTransactionName.value = ''
     inputTransactionAmount.value = ''
+}
 
-})
+form.addEventListener('submit', handleFormSubmit)
