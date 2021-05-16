@@ -1,4 +1,4 @@
-const transactionsUl = document.querySelector('#transactions')
+const transactionUl = document.querySelector('#transactions')
 const incomeDisplay = document.querySelector('#money-plus')
 const expenseDisplay = document.querySelector('#money-minus')
 const balanceDisplay = document.querySelector('#balance')
@@ -33,7 +33,7 @@ const addTransactionInDOM = transaction => {
             x
         </button>
     `
-    transactionsUl.append(li)
+    transactionUl.append(li)
 }
 
 const updateBalanceValues = ()=> {
@@ -57,7 +57,7 @@ const updateBalanceValues = ()=> {
 }
 
 const init = () => {
-transactionsUl.innerHTML = ''
+transactionUl.innerHTML = ''
 dummyTransactions.forEach(addTransactionInDOM)
 updateBalanceValues()
 }
